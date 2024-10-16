@@ -110,6 +110,7 @@ struct metadata_t {
     int current_website_index;
     size_t recovery_firmware_size;
     int recovery_mode_straping_pin;
+    int server_mode_strapping_pin;
     uint8_t global_volume;
     uint8_t wlog_verbosity;
     uint8_t wifi_starts_on;

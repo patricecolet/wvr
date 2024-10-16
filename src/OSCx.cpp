@@ -3,10 +3,8 @@
 //
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include <WiFi.h>
 #include <WiFiUdp.h>
 #include <OSCData.h>
-#include <WiFi.h>
 #include "OSCx.h"
 
 

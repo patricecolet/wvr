@@ -19,6 +19,7 @@
 #include "WVR.h"
 #include "gpio.h"
 #include "server.h"
+#include "boot.h"
 
 struct wav_lu_t **wav_lut;
 
@@ -87,7 +88,7 @@ void wvr_init(bool useFTDI, bool useUsbMidi, bool checkRecoveryModePin, bool use
   log_i("cpu speed %d", ESP.getCpuFreqMHz());
   log_i("Flash Speed = %d Flash mode = %d", ESP.getFlashChipSpeed(), (int)ESP.getFlashChipMode());
   log_i("wvr starting up \n\n*** VERSION %s ***\n\n",VERSION_CODE);
-
+  Serial.printf("wvr starting up \n\n*** VERSION %s ***\n\n",VERSION_CODE);
   cJSON_Hooks memoryHook;
 	memoryHook.malloc_fn = ps_malloc;
 	memoryHook.free_fn = free;
@@ -107,6 +108,7 @@ void wvr_init(bool useFTDI, bool useUsbMidi, bool checkRecoveryModePin, bool use
     {
         recovery_server_begin();
         log_i("! WVR is in recovery mode !");
+        Serial.println("! WVR is in recovery mode !");
         vTaskDelete(NULL);
         return;
     }
@@ -126,17 +128,21 @@ void wvr_init(bool useFTDI, bool useUsbMidi, bool checkRecoveryModePin, bool use
   wav_player_start();
   logSize("wav player");
 
+
   server_begin();
   logSize("server");
 
   OSC_init(useOsc,oscPort);
-    logSize("osc");
-  log_i("do_station_mode:%d network:%s pass:%s",get_metadata()->do_station_mode,get_metadata()->station_ssid,get_metadata()->station_passphrase);
+  logSize("osc");
 
-  // if(get_metadata()->do_station_mode == 1)
-  // {
-  //   try_log_on_network();
-  // }
+  log_i("do_station_mode:%d network:%s pass:%s",get_metadata()->do_station_mode,get_metadata()->station_ssid,get_metadata()->station_passphrase);
+/*
+   if(get_metadata()->do_station_mode == 1)
+   {
+     try_log_on_network();
+   }
+*/
+
 
   button_init();
   logSize("button");

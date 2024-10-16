@@ -242,6 +242,7 @@ void handleWav(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t
     //start
     //wav_player_pause();
     // log_i("start len %d", len);
+    //  Serial.println("handling Wav\n\n");
     const AsyncWebHeader* size_string = request->getHeader("size");
     sscanf(size_string->value().c_str(), "%d", &w_size);
     // log_i("size %d", w_size);
@@ -254,7 +255,7 @@ void handleWav(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t
     const AsyncWebHeader* note_string = request->getHeader("note");
     sscanf(note_string->value().c_str(), "%d", &w_note);
     // log_i("note %d", w_note);
-    // log_i("%s w_size %d w_voice %d w_note %d", w_name, w_size, w_voice, w_note);
+    Serial.printf("%s w_size %d w_voice %d w_note %d \n", w_name, w_size, w_voice, w_note);
     w_start_block = find_gap_in_file_system(w_size);
     // log_i("w_start_block %d",w_start_block);
     if(w_start_block == 0)
@@ -272,10 +273,16 @@ void handleWav(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t
   feedLoopWDT();
   // log_i("len %d", len);
   write_wav_to_emmc(data, w_start_block, len);
+
   w_bytes_read += len;
+
   if(index + len == total){
     //done
     // log_i("close %d");
+      Serial.print("Size: ");
+      Serial.println(w_size);
+      Serial.print("Bytes written: ");
+      Serial.println(total);
     close_wav_to_emmc();
     add_wav_to_file_system(&w_name[0],w_voice,w_note,w_start_block,total);
     request->send(200);
@@ -728,7 +735,8 @@ void server_begin() {
   // WiFi.softAPConfig(IP, gateway, NMask);
 
   WiFi.softAP(metadata->ssid, metadata->passphrase);
-  log_i("set ssid :%s, set passphrase: %s",metadata->ssid, metadata->passphrase);
+    log_i("set ssid :%s, set passphrase: %s",metadata->ssid, metadata->passphrase);
+    Serial.printf("set ssid :%s, set passphrase: %s \n\n",metadata->ssid, metadata->passphrase);
  
   //  again??
   // WiFi.softAPConfig(IP, gateway, NMask);

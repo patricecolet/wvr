@@ -19,6 +19,8 @@
 #define MIDI_CC_MUTE 120
 #define MIDI_CC_RESET 121
 
+#define NOTE_VOLUME 100
+
 #define MIDI_CC_EQ_BASS 20
 #define MIDI_CC_EQ_TREBLE 21
 

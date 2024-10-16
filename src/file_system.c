@@ -208,7 +208,7 @@ void init_metadata(void){
         .current_firmware_index = -1,
         .current_website_index = -1,
         .recovery_mode_straping_pin = 5, // button 1 on dev board,
-        .should_check_strapping_pin = 1, // default to should check
+        .should_check_strapping_pin = true, // default to should check
         .global_volume = 127,
         .wlog_verbosity = 0,
         .wifi_starts_on = 1,
@@ -218,9 +218,9 @@ void init_metadata(void){
         .midi_channel = 0,
         .pitch_bend_semitones_up = 2,
         .pitch_bend_semitones_down = 2,
-        .do_station_mode = 0,
-        .station_ssid = "",
-        .station_passphrase = ""
+        .do_station_mode = 1,
+        .station_ssid = "Nyktomobile",
+        .station_passphrase = "jaiunprojetdevenirfou"
     };
     memcpy(new_metadata.tag, waver_tag, METADATA_TAG_LENGTH);
     write_metadata(new_metadata);

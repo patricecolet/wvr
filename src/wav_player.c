@@ -106,6 +106,7 @@ struct buf_t {
   u16p16 sample_pointer;
   size_t fade_counter;
   uint8_t volume;
+  uint8_t velocity;
   uint8_t voice;
   int8_t fade;
   uint8_t current_buf;
@@ -173,7 +174,8 @@ void init_buffs(void)
     bufs[i].pause_state = PAUSE_NONE;
     bufs[i].current_buf = 0;
     // uint8_t's
-    bufs[i].volume=127;
+      bufs[i].volume=127;
+      bufs[i].velocity=0;
     bufs[i].fade=0;
     // size_t's
     bufs[i].read_block = 0;
@@ -328,6 +330,17 @@ void play_wav(uint8_t voice, uint8_t note, uint8_t velocity)
   wav_player_event.note = note;
   wav_player_event.channel = 0;
   xQueueSendToBack(wav_player_queue, &wav_player_event, portMAX_DELAY);
+}
+
+void note_volume(uint8_t voice, uint8_t note, uint8_t volume)
+{
+    struct wav_player_event_t wav_player_event;
+    wav_player_event.code = NOTE_VOLUME;
+    wav_player_event.voice = voice;
+    wav_player_event.velocity = volume;
+    wav_player_event.note = note;
+    wav_player_event.channel = 0;
+    xQueueSendToBack(wav_player_queue, &wav_player_event, portMAX_DELAY);
 }
 
 void toggle_wav(uint8_t voice, uint8_t note, uint8_t velocity)
@@ -580,6 +593,7 @@ void IRAM_ATTR wav_player_task(void* pvParameters)
               break;
             }
             bufs[i].wav_player_event = wav_player_event;
+            bufs[i].velocity = wav_player_event.velocity;
             bufs[i].voice = wav_player_event.voice;
             bufs[i].free = 0;
             bufs[i].done = 0;
@@ -666,6 +680,20 @@ void IRAM_ATTR wav_player_task(void* pvParameters)
           }
         }
       }
+
+      else if(wav_player_event.code == NOTE_VOLUME)
+      {
+          for(int b = 0; b < NUM_BUFFERS; b++)
+          {
+                             if(bufs[b].wav_player_event.voice == wav_player_event.voice &&
+                             bufs[b].wav_player_event.note == wav_player_event.note)
+                             {
+                     //            bufs[b].volume = wav_player_event.velocity;
+                                 bufs[b].volume = (int)((float)bufs[b].velocity * (float)wav_player_event.velocity/100);
+                }
+          }
+      }
+
     }
 
     num_reads = 0;

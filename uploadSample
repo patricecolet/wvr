@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#You should have received a copy of the GNU General Public License
+#along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+
+if ! [ -z "$2" ]
+then
+
+    echo "uploading $1" ;
+    size=`stat -f %z $1`;
+    echo "size: $size";
+    filename=`basename $1`;
+    name=`cut -d '.' -f 1 <<< "$filename"`;
+    echo "file name: $name";
+    note=$2;
+    echo "note: $note";
+    voice=0;
+    echo "voice: $voice"
+    verbose=$3
+
+    if [ $size ]; then
+        curl $verbose --data-binary "@$1" http://192.168.4.1/addwav --header "content-type:text/plain" --header "name: $name" --header "size: $size" --header "note: $note" --header "voice: $voice";
+    fi
+else 
+    echo "usage: ./uploadSample 'sampleName.wav' 'note number (eg:48)'"
+fi

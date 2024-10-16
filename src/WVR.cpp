@@ -33,6 +33,11 @@ void WVR::stop(uint8_t voice, uint8_t note)
     stop_wav(voice,note);
 }
 
+void WVR::noteVolume(uint8_t voice, uint8_t note, uint8_t volume)
+{
+    note_volume(voice,note,volume);
+}
+
 void WVR::wifiOff()
 {
     if(get_wifi_is_on() == 1){

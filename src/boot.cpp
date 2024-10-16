@@ -157,5 +157,26 @@ int check_for_recovery_mode()
     pinMode(wvr_pins[new_metadata->recovery_mode_straping_pin], INPUT_PULLUP);
     int res = digitalRead(wvr_pins[new_metadata->recovery_mode_straping_pin]);
     log_i("recovery mode pin %d reads %s",new_metadata->recovery_mode_straping_pin, res ? "high" : "low");
+    Serial.printf("recovery mode pin %d reads %s \n\n",new_metadata->recovery_mode_straping_pin, res ? "high" : "low");
+    return res;
+}
+
+int check_for_server_mode()
+{
+    metadata_t *new_metadata = get_metadata();
+    /*
+    if(!new_metadata->should_check_strapping_pin)
+    {
+        Serial.println("do a normal boot");
+        // do a normal boot
+        return 1;
+    }
+    */
+    gpio_reset_pin(gpio_pins[18]);
+    Serial.printf("checking server mode pin %d: \n",18);
+    pinMode(wvr_pins[18], INPUT_PULLUP);
+    int res = digitalRead(wvr_pins[18]);
+    log_i("server mode pin %d reads %s",18, res ? "high" : "low");
+    Serial.printf("server mode pin %d reads %s \n\n",18, res ? "high" : "low");
     return res;
 }

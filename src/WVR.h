@@ -15,6 +15,7 @@ class WVR {
         void begin(void);
         void play(uint8_t voice, uint8_t note, uint8_t velocity);
         void stop(uint8_t voice, uint8_t note);
+        void noteVolume(uint8_t voice, uint8_t note, uint8_t volume);
         void wifiOff(void);
         void wifiOn(void);
         void toggleWifi(void);
@@ -33,9 +34,11 @@ class WVR {
         bool useFTDI;
         bool useUsbMidi;
         bool useOsc;
+        bool getMacAddress;
         uint16_t oscPort;
         bool forceWifiOn;
         bool checkRecoveryModePin;
+        bool checkServerModePin;
 };
 
 #endif
